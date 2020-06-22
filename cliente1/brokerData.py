@@ -53,11 +53,19 @@ topic_sala1 = 'salas/'+str(GRUPO)+'/'+sala2
 #subs
 SUBS_comandos2 = 'comandos/'+str(GRUPO)+'/'+usuario
 SUBS_comandos = ('comandos/'+str(GRUPO)+'/'+usuario, qos)
+SUBS_audio = ('audios/'+str(GRUPO)+'/'+usuario, qos)
 SUBS_usuario = ('usuarios/'+str(GRUPO)+'/'+usuario, qos)
 SUBS_sala1 = ('salas/'+ str(GRUPO)+'/'+sala1, qos)
 SUBS_sala2 = ('salas/'+ str(GRUPO)+'/'+sala2, qos)
 #tramas de comandos
 trama_ACK = ACK+user_t
+
+#audio
+PUBL_audios_us =  'usuarios/'+str(GRUPO)+'/'+str(user1)
+PUBL_audios_sal1= 'audios/'+str(GRUPO)+'/'+str(sala1)
+PUBL_audios_sal2= 'audios/'+str(GRUPO)+'/'+str(sala1)
+trama_audio = open('prueba.wap', 'rb') 
+
 
 
 #class comandos (object):
@@ -85,3 +93,4 @@ class comandos(object):
     #Representacion cuando se invoca el objeto sin casting a STRING.
     def __repr__(self):
         return self.__str__()
+

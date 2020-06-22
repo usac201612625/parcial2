@@ -1,4 +1,5 @@
 import paho.mqtt.client as paho
+import paho.mqtt.client as mqtt
 import logging
 import time
 import random
@@ -71,13 +72,14 @@ client.loop_start()
 
 #hilo alive
 
-
+'''
 t1 = threading.Thread (name = 'verificacion',
                             target = audio,
                             daemon = True
                             )
 
 t1.start()
+'''
 #Loop principal: leer los datos de los sensores y enviarlos al broker en los topics adecuados cada cierto tiempo
 try:
     while True:
@@ -112,19 +114,29 @@ try:
                     trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
                     #enviamos el mensaje
                     client.publish(topic_user2, trama, qos = 0,retain = False)
+        if x == '2':
+            print('elija la duración del audio')
+            t = int(input('-:'))
+            os.system('arecord -d {!r} -f U8 -r 8000 audio_p.wap'.format(t))
+            f = open("audio_p.wap", "rb")
+            imagestring = f.read()
+            f.close()
+            trama_audio = bytearray(imagestring)
+            client.publish(PUBL_audios_us,trama_audio , qos = 0,retain = False)
+             
         if x == '3':
             logging.warning("Desconectando del broker MQTT...")
             client.loop_stop()
-            if t1.isAlive():
-                t1._stop()
+            #if t1.isAlive():
+             #   t1._stop()
             break
         else:
             print('numero incorrecto')
 except KeyboardInterrupt:
     logging.warning("Desconectando del broker MQTT...")
     client.loop_stop()
-    if t1.isAlive():
-        t1._stop()
+    #if t1.isAlive():
+     #   t1._stop()
 
 finally:
     client.disconnect()
