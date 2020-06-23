@@ -31,10 +31,12 @@ def alive(ALIVE_PERIOD):
     client.publish(SUBS_comandos2 , tramaALIV, qos = 0,retain = False)
     time.sleep(ALIVE_PERIOD)
 '''
-      
+def play():
+    os.system('aplay audio_s.wap')
+
 #Handler en caso suceda la conexion con el broker MQTT
 def on_connect(client, userdata, flags, rc): 
-    client.subscribe([SUBS_comandos,SUBS_usuario,SUBS_sala1,SUBS_sala2, ])
+    client.subscribe([SUBS_comandos,SUBS_usuario,SUBS_sala1,SUBS_sala2,SUBS_audio])
 
 #Handler en caso se publique satisfactoriamente en el broker MQTT
 
@@ -45,13 +47,18 @@ def on_publish(client, userdata, mid):
 
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
-    logging.debug("Ha llegado el mensaje al topic: " + str(msg.topic))
-    logging.debug("El contenido del mensaje es: " + str(msg.payload))
-    #Y se almacena en el log
-    filename= 'mqtt.log'
-    archivo = open(filename,'a') #Abrir para SOBREESCRIBIR el archivo existente
-    archivo.write(str(msg.topic) +  '-> ' + str(msg.payload) +'\n')
-    archivo.close()
+    if SUBS_comandos2 == str(msg.topic):
+        archivo = open('audio_s.wap', 'wb')
+        archivo.write(msg.payload)
+        hil ()
+    else:
+        logging.info("Ha llegado el mensaje al topic: " + str(msg.topic))
+        logging.info("El contenido del mensaje es: " + str(msg.payload))
+        #Y se almacena en el log
+        filename= 'mqtt.log'
+        archivo = open(filename,'a') #Abrir para SOBREESCRIBIR el archivo existente
+        archivo.write(str(msg.topic) +  '-> ' + str(msg.payload) +'\n')
+        archivo.close()
 
 
 logging.info("Cliente MQTT con paho-mqtt") #Mensaje en consola
@@ -72,14 +79,15 @@ client.loop_start()
 
 #hilo alive
 
-'''
-t1 = threading.Thread (name = 'verificacion',
-                            target = audio,
-                            daemon = True
-                            )
+def hil ():
+    t1 = threading.Thread (name = 'verificacion',
+                                target = play,
+                                daemon = True
+                                )
 
-t1.start()
-'''
+    t1.start()
+    t1.join()
+
 #Loop principal: leer los datos de los sensores y enviarlos al broker en los topics adecuados cada cierto tiempo
 try:
     while True:
@@ -113,7 +121,12 @@ try:
                     t = input('escriba el texto:  ')
                     trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
                     #enviamos el mensaje
-                    client.publish(topic_user2, trama, qos = 0,retain = False)
+                    client.publish(topic_sala1 , trama, qos = 0,retain = False)
+                if x == '2' :
+                    t = input('escriba el texto:  ')
+                    trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
+                    #enviamos el mensaje
+                    client.publish(topic_sala2, trama, qos = 0,retain = False)
         if x == '2':
             print('elija la duración del audio')
             t = int(input('-:'))
@@ -122,7 +135,21 @@ try:
             imagestring = f.read()
             f.close()
             trama_audio = bytearray(imagestring)
-            client.publish(PUBL_audios_us,trama_audio , qos = 0,retain = False)
+            print('Enviar a')
+            print('1. sala')
+            print('2. usuario')
+            x = input('-:')
+            if x == '1' :   
+                print('Enviar a')
+                print('1. sala1')
+                print('2. usala2')
+                t = input('-:')
+                if t == '1':
+                    client.publish(PUBL_audios_sal1,trama_audio , qos = 0,retain = False)
+                if t == '2':
+                    client.publish(PUBL_audios_sal2,trama_audio , qos = 0,retain = False)
+            if x == '2':
+                client.publish(PUBL_audios_us,trama_audio , qos = 0,retain = False)
              
         if x == '3':
             logging.warning("Desconectando del broker MQTT...")
