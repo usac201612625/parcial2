@@ -86,7 +86,7 @@ def hil ():
                                 )
 
     t1.start()
-    t1.join()
+    
 
 #Loop principal: leer los datos de los sensores y enviarlos al broker en los topics adecuados cada cierto tiempo
 try:
