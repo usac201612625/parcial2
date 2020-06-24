@@ -1,3 +1,5 @@
+#GABRIEL DAVID TITUS ARREAGA 
+#SEBASTIAN MONTEPEQUE CASTELLANOS
 import paho.mqtt.client as paho
 import paho.mqtt.client as mqtt
 import logging
@@ -6,33 +8,33 @@ import random
 import threading #Concurrencia con hilos
 import sys 
 import os 
-#from mqttTestSubscription import *
 from brokerData import* #Informacion de la conexion
 
+#GDTA CONFIGURACION DE ARCHIVO LOG PARA GUARDAR HISTORIAL DE MENSAJES
 LOG_FILENAME = 'mqtt.log'
 os.remove("mqtt.log")
 
-#Configuracion inicial de logging
+#GDTA Configuracion inicial de logging
 logging.basicConfig(
     level = logging.INFO, 
     format = '[%(levelname)s] (%(processName)-10s) %(message)s'
     )
       
-
+#GDTA SE REPRODUCE EL AUDIO
 def play():
     os.system('aplay audio_s.wap')
 
-#Handler en caso suceda la conexion con el broker MQTT
+#GDTA Handler en caso suceda la conexion con el broker MQTT y suscribciones
 def on_connect(client, userdata, flags, rc): 
     client.subscribe([SUBS_comandos,SUBS_usuario,SUBS_sala1,SUBS_sala2,SUBS_audio])
 
-#Handler en caso se publique satisfactoriamente en el broker MQTT
+#GDTA Handler en caso se publique satisfactoriamente en el broker MQTT
 
 def on_publish(client, userdata, mid): 
     publishText = "Publicacion satisfactoria"
     logging.debug( str(publishText) )
 
-
+#GDTA HANDLER CUANDO SE RECIBE UN MENSAJE
 def on_message(client, userdata, msg):
     #Se muestra en pantalla informacion que ha llegado
     if SUBS_comandos2 == str(msg.topic):
@@ -52,7 +54,7 @@ def on_message(client, userdata, msg):
 logging.info("Cliente MQTT con paho-mqtt") #Mensaje en consola
 
 '''
-Config. inicial del cliente MQTT
+GDTA Config. inicial del cliente MQTT
 '''
 client = paho.Client(clean_session=True) #Nueva instancia de cliente
 client.on_connect = on_connect #Se configura la funcion "Handler" cuando suceda la conexion
@@ -65,7 +67,7 @@ client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
 client.loop_start()
 
 
-#hilo alive
+#SMC hilo alive manda alive cada 2 seg. 
 
 def hil ():
     t1 = threading.Thread (name = 'verificacion',
@@ -76,14 +78,18 @@ def hil ():
     t1.start()
     
 
-#Loop principal: leer los datos de los sensores y enviarlos al broker en los topics adecuados cada cierto tiempo
+#SMC Loop principal: 
+''' 
+EN ESTE LOOP SE DESPLIEGAN LAS INSTRUCCIONES AL USUARIO Y ESTE INGRESA QUE DESEA
+REALIZAR SI GRABAR UN AUDIO O ENVIAR UN MENSAJE O DESCONECTARSE
+ '''
 try:
     while True:
         print('1. Enviar texto')
         print('2. Enviar mensaje de voz')
         print('3. Salir')
         x = input('-:')
-    #vemos que hacción hacer y a quien enviarlo
+    #SMC vemos que hacción hacer y a quien enviarlo
         #enviar mensaje 
         if x == '1' :  #usurio 1
             print('a. Enviar a usuario')
@@ -95,8 +101,8 @@ try:
                 t = input('-:')
                 if x == '1' :
                     t = input('escriba el texto:  ')
-                    trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
-                    #enviamos el mensaje
+                    trama = user_t + SEPARADOR + t.encode() #SMC codifica el mensaje 
+                    #SMC enviamos el mensaje
                     client.publish(topic_user2, trama, qos = 0,retain = False)
                 else:
                     t = 0
@@ -107,12 +113,12 @@ try:
                 t = input('-:')
                 if x == '1' :
                     t = input('escriba el texto:  ')
-                    trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
+                    trama = user_t + SEPARADOR + t.encode() #SMC codifica el mensaje 
                     #enviamos el mensaje
                     client.publish(topic_sala1 , trama, qos = 0,retain = False)
                 if x == '2' :
                     t = input('escriba el texto:  ')
-                    trama = user_t + SEPARADOR + t.encode() #codifica el mensaje 
+                    trama = user_t + SEPARADOR + t.encode() #SMC codifica el mensaje 
                     #enviamos el mensaje
                     client.publish(topic_sala2, trama, qos = 0,retain = False)
         if x == '2':

@@ -6,9 +6,9 @@ import random
 import threading #Concurrencia con hilos
 import sys 
 import os 
-#from mqttTestSubscription import *
 from brokerData import* #Informacion de la conexion
 
+#GDTA SE CONFIGURA ARCHIVO PARA HISTORIAL Y LOGGING
 LOG_FILENAME = 'mqtt.log'
 os.remove("mqtt.log")
 
@@ -18,11 +18,8 @@ logging.basicConfig(
     format = '[%(levelname)s] (%(processName)-10s) %(message)s'
     )
       
-#Tiempo de espera entre lectura y envio de dato de sensores a broker (en segundos)
-
-
-#mensaje de alive cada 2 segundos
-
+#GDTA SE CONFIGURAN LA REPRODUCCCION DE AUDIO LAS SUSCRIPCIONES
+# LAS PUBLICACIONES  Y LA LECTURA,ESCRITURA DE LOS ARCHIVOS DE AUDIO      
 def play():
     os.system('aplay audio_s.wap')
 
@@ -69,7 +66,7 @@ client.connect(host=MQTT_HOST, port = MQTT_PORT) #Conectar al servidor remoto
 client.loop_start()
 
 
-#hilo alive
+#SMC hilo alive
 
 def hil ():
     t1 = threading.Thread (name = 'verificacion',
@@ -80,7 +77,8 @@ def hil ():
     t1.start()
 
 
-#Loop principal: leer los datos de los sensores y enviarlos al broker en los topics adecuados cada cierto tiempo
+#SMC Loop principal:  TODA LA INTERACCION CON EL USUARIO Y LAS PETICIONES
+#DE INSTRUCCIONES
 try:
     while True:
         print('1. Enviar texto')

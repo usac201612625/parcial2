@@ -2,14 +2,14 @@
 #"157.245.82.242"
 MQTT_HOST = "167.71.243.238"
 MQTT_PORT = 1883
-
+#GDTA
 #MQTT_USER = "pr24"
 #MQTT_PASS = "Patito!#2020"
 MQTT_USER = "proyectos"
 MQTT_PASS = "proyectos980"
 arch = 'Archivos.tex'
 
-#Credenciales
+#GDTA Credenciales
 
 def read(a):
     LISTADO = a
@@ -26,7 +26,8 @@ sala1= datos[3]
 sala2= datos[4]
 
 
-#comaistrondos
+#GDTA comaistrondos SE CONFIGURAN LAS INSTRUCCIONES, LOS TOPICS Y LAS TRAMAS DE 
+# CADA USUARIO
 FTR = b'\x03'       #audio
 ALIVE = b'\x04'     #alive
 ACK = b'\x05'
@@ -66,7 +67,7 @@ PUBL_audios_sal1= 'audios/'+str(GRUPO)+'/'+str(sala1)
 PUBL_audios_sal2= 'audios/'+str(GRUPO)+'/'+str(sala2)
 
 
-#class comandos (object):
+#SMC class comandos (object):
 class comandos(object):
     def __init__(self, data = []):
         self.data = list(data)
@@ -88,7 +89,7 @@ class comandos(object):
         if len(self.data) ==i:
             ALIVE_PERIOD = 2
             return ALIVE_PERIOD,i,e
-    #Representacion cuando se invoca el objeto sin casting a STRING.
+    #SMC Representacion cuando se invoca el objeto sin casting a STRING.
     def __repr__(self):
         return self.__str__()
 
