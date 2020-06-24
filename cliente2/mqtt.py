@@ -9,9 +9,6 @@ import os
 #from mqttTestSubscription import *
 from brokerData import* #Informacion de la conexion
 
-'''
-Ejemplo de cliente MQTT: gateway de red de sensores
-'''
 LOG_FILENAME = 'mqtt.log'
 os.remove("mqtt.log")
 
@@ -21,16 +18,7 @@ logging.basicConfig(
     format = '[%(levelname)s] (%(processName)-10s) %(message)s'
     )
       
-#Tiempo de espera entre lectura y envio de dato de sensores a broker (en segundos)
 
-
-#mensaje de alive cada 2 segundos
-'''
-def alive(ALIVE_PERIOD):
-  # se envia un menaje cada 2 segundos indicando que sigue conectado
-    client.publish(SUBS_comandos2 , tramaALIV, qos = 0,retain = False)
-    time.sleep(ALIVE_PERIOD)
-'''
 def play():
     os.system('aplay audio_s.wap')
 

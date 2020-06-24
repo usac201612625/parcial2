@@ -10,8 +10,7 @@ MQTT_PASS = "proyectos980"
 arch = 'Archivos.tex'
 
 #Credenciales
-#Se acostumbra solicitar al usuario que ingrese su user/pass
-#no es buena practica dejar escritas en el codigo las credenciales
+
 def read(a):
     LISTADO = a
     datos = []
@@ -65,8 +64,6 @@ trama_ACK = ACK+user_t
 PUBL_audios_us =  'audios/'+str(GRUPO)+'/'+str(user1)
 PUBL_audios_sal1= 'audios/'+str(GRUPO)+'/'+str(sala1)
 PUBL_audios_sal2= 'audios/'+str(GRUPO)+'/'+str(sala2)
-
-
 
 
 #class comandos (object):
